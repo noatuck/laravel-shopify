@@ -2,7 +2,7 @@
 
 namespace Osiset\ShopifyApp\Traits;
 
-use App\Jobs\AbstractShopifyWebhookJob;
+use App\Jobs\ShopifyWebhooks\AbstractShopifyWebhookJob;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response as ResponseResponse;
 use Illuminate\Support\Facades\Response;
