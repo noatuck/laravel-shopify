@@ -2,6 +2,7 @@
 
 namespace Osiset\ShopifyApp\Traits;
 
+use App\Jobs\AbstractShopifyWebhookJob;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response as ResponseResponse;
 use Illuminate\Support\Facades\Response;
@@ -24,11 +25,10 @@ trait WebhookController
     {
         // Get the job class and dispatch
         $jobClass = getShopifyConfig('job_namespace').str_replace('-', '', ucwords($type, '-')).'Job';
-        $jobData = json_decode($request->getContent());
 
         $jobClass::dispatch(
             $request->header('x-shopify-shop-domain'),
-            $jobData
+            AbstractShopifyWebhookJob::compressPayload($request->getContent())
         )->onQueue(getShopifyConfig('job_queues')['webhooks']);
 
         return Response::make('', 201);
