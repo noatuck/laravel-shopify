@@ -26,10 +26,16 @@ trait WebhookController
         // Get the job class and dispatch
         $jobClass = getShopifyConfig('job_namespace').str_replace('-', '', ucwords($type, '-')).'Job';
 
+        if (defined("{$jobClass}::DELAY_SECONDS")) {
+            $delayTime = now()->addSecond(constant("{$jobClass}::DELAY_SECONDS"));
+        } else {
+            $delayTime = now();
+        }
+
         $jobClass::dispatch(
             $request->header('x-shopify-shop-domain'),
             AbstractShopifyWebhookJob::compressPayload($request->getContent())
-        )->onQueue(getShopifyConfig('job_queues')['webhooks']);
+        )->delay($delayTime)->onQueue(getShopifyConfig('job_queues')['webhooks']);
 
         return Response::make('', 201);
     }
