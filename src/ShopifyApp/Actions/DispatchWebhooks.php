@@ -66,10 +66,17 @@ class DispatchWebhooks
                 $webhooks
             );
         } else {
+            if (defined("{$this->jobClass}::DELAY_SECONDS")) {
+                $delayTime = now()->addSecond(constant("{$this->jobClass}::DELAY_SECONDS"));
+            } else {
+                $delayTime = now();
+            }
+
             ($this->jobClass)::dispatch(
                 $shop->getId(),
                 $webhooks
-            )->onQueue(getShopifyConfig('job_queues')['webhooks']);
+            )->delay($delayTime)
+                ->onQueue(getShopifyConfig('job_queues')['webhooks']);
         }
 
         return true;
