@@ -97,7 +97,8 @@ class DispatchScriptsTest extends TestCase
             true // sync
         );
 
-        Queue::assertNotPushed(ScripttagInstaller::class);
+        // Assert dispatched sync
+        $this->assertDispatchedSync(ScripttagInstaller::class);
         $this->assertTrue($result);
     }
 }

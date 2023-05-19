@@ -2,7 +2,6 @@
 
 namespace Osiset\ShopifyApp\Traits;
 
-use App\Jobs\ShopifyWebhooks\AbstractShopifyWebhookJob;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response as ResponseResponse;
 use Illuminate\Support\Facades\Response;
@@ -13,6 +12,17 @@ use function Osiset\ShopifyApp\getShopifyConfig;
  */
 trait WebhookController
 {
+    protected function compressPayload(string $payload)
+    {
+        $compressed = gzcompress($payload, 9);
+
+        if ($compressed === false) {
+            throw new \Exception('gzcompress() failed in compressPayload');
+        }
+
+        return bin2hex($compressed);
+    }
+
     /**
      * Handles an incoming webhook.
      *
@@ -34,7 +44,7 @@ trait WebhookController
 
         $jobClass::dispatch(
             $request->header('x-shopify-shop-domain'),
-            AbstractShopifyWebhookJob::compressPayload($request->getContent())
+            $this->compressPayload($request->getContent())
         )->delay($delayTime)->onQueue(getShopifyConfig('job_queues')['webhooks']);
 
         return Response::make('', 201);

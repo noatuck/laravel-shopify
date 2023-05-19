@@ -26,13 +26,13 @@ trait BillingController
     /**
      * Redirects to billing screen for Shopify.
      *
-     * @param int|null    $plan        The plan's ID, if provided in route.
      * @param GetPlanUrl  $getPlanUrl  The action for getting the plan URL.
      * @param ShopSession $shopSession The shop session helper.
-     *
+     * @param int|null    $plan        The plan's ID, if provided in route.
+     * 
      * @return ViewView
      */
-    public function index(?int $plan = null, GetPlanUrl $getPlanUrl, ShopSession $shopSession): ViewView
+    public function index(GetPlanUrl $getPlanUrl, ShopSession $shopSession, ?int $plan = null): ViewView
     {
         // Get the plan URL for redirect
         $url = $getPlanUrl(

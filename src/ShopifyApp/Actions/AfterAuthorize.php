@@ -53,7 +53,7 @@ class AfterAuthorize
             $job = $config['job'];
             if (isset($config['inline']) && $config['inline'] === true) {
                 // Run this job immediately
-                $job::dispatchNow($shop);
+                $job::dispatchSync($shop);
             } else {
                 // Run later
                 $job::dispatch($shop)
