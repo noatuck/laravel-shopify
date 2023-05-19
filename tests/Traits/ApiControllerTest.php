@@ -460,7 +460,7 @@ class ApiControllerTest extends TestCase
         );
 
         $response->assertOk();
-        $this->assertSame('{"name":"shop-name.myshopify.com","shopify_grandfathered":"0","shopify_freemium":"0","plan":null}', $response->getContent());
+        $this->assertSame('{"name":"shop-name.myshopify.com","shopify_grandfathered":0,"shopify_freemium":0,"plan":null}', $response->getContent());
     }
 
     public function testApiGetPlans(): void

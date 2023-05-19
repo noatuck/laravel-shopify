@@ -37,9 +37,11 @@ class WebhookControllerTest extends TestCase
         // Check it was created and job was pushed
         $response->assertStatus(201);
         Queue::assertPushed(\App\Jobs\OrdersCreateJob::class, function ($job) use ($shop) {
+            $data = json_decode(gzuncompress(hex2bin($job->data)));
+
             return ShopDomain::fromNative($job->shopDomain)->isSame($shop->getDomain())
-                && $job->data instanceof \stdClass
-                && $job->data->email === 'jon@doe.ca';
+                && $data instanceof \stdClass
+                && $data->email === 'jon@doe.ca';
         });
     }
 

@@ -107,7 +107,7 @@ class DispatchWebhooksTest extends TestCase
             true // sync
         );
 
-        Queue::assertNotPushed(WebhookInstaller::class);
+        $this->assertDispatchedSync(WebhookInstaller::class);
         $this->assertTrue($result);
     }
 }

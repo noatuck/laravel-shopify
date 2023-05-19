@@ -4,7 +4,7 @@ namespace Osiset\ShopifyApp\Test;
 
 use Closure;
 use Illuminate\Support\Facades\App;
-use Orchestra\Database\ConsoleServiceProvider;
+use Illuminate\Support\Facades\Queue;
 use Orchestra\Testbench\TestCase as OrchestraTestCase;
 use Osiset\BasicShopifyAPI\Options;
 use Osiset\ShopifyApp\ShopifyAppProvider;
@@ -32,7 +32,6 @@ abstract class TestCase extends OrchestraTestCase
         // ConsoleServiceProvider required to make migrations work
         return [
             ShopifyAppProvider::class,
-            ConsoleServiceProvider::class,
         ];
     }
 
@@ -99,5 +98,10 @@ abstract class TestCase extends OrchestraTestCase
                 );
             }
         );
+    }
+
+    protected function assertDispatchedSync($job)
+    {
+        $this->assertEquals('sync', Queue::pushedJobs()[$job][0]['job']->connection);
     }
 }
